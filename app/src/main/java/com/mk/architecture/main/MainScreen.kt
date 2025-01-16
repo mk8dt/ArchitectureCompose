@@ -31,4 +31,5 @@ fun <DATA, EFFECT, ACTION> MainScreen(
     }
 
     content(state)
+
 }

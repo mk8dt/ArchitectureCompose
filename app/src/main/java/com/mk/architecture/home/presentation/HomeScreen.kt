@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mk.architecture.detail.Detail
+import com.mk.architecture.core.ui.components.loading.MainLoading
 import com.mk.architecture.detail.Detail.createRoute
 import com.mk.architecture.home.domain.models.Product
 import com.mk.architecture.home.presentation.HomeAction.OnProductClick
@@ -19,8 +19,8 @@ import com.mk.architecture.home.presentation.HomeEffect.NavigateToDetail
 import com.mk.architecture.home.presentation.components.ProductItem
 import com.mk.architecture.main.MainScreen
 import com.mk.architecture.main.UiState
+import com.mk.architecture.main.UiState.Companion.success
 import com.mk.architecture.mockdata.productList
-import com.mk.architecture.core.ui.components.loading.MainLoading
 
 @Composable
 fun HomeScreen(
@@ -75,7 +75,7 @@ fun Screen(
 @Composable
 fun HomeScreenPreview() {
     Screen(
-        state = UiState.success(productList()),
+        state = success(productList()),
         action = {}
     )
 }
