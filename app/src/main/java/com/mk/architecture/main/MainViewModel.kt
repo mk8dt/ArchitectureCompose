@@ -1,9 +1,12 @@
 package com.mk.architecture.main
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mk.architecture.core.manager.error.ResultException.UpdateAppNeeded
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 abstract class MainViewModel<DATA, EFFECT, ACTION>(
     val screenConfig: ScreenConfig<DATA, EFFECT>
@@ -19,19 +22,37 @@ abstract class MainViewModel<DATA, EFFECT, ACTION>(
 
     abstract fun onUserAction(action: ACTION)
 
+    fun manageRequest(
+        showLoading: Boolean,
+        request: Result<DATA>
+    ) = viewModelScope.launch {
+        if (showLoading) showLoading()
+
+        request
+            .onFailure { manageError(it) }
+            .onSuccess { success(it) }
+    }
+
+    private fun manageError(throwable: Throwable) {
+        when (throwable) {
+            is UpdateAppNeeded -> showUpdateAppDialog()
+            else -> showError(screenConfig.mapToScreenError(throwable))
+        }
+    }
+
     protected fun showLoading() {
         _state.update { UiState.loading() }
     }
 
-    protected fun success(data: DATA) {
+    private fun success(data: DATA) {
         _state.update { UiState.success(data) }
     }
 
-    protected fun showError(errorMessage: String) {
+    private fun showError(errorMessage: String) {
         _state.update { UiState.error(errorMessage) }
     }
 
-    protected fun showUpdateAppDialog() {
+    private fun showUpdateAppDialog() {
         _state.update { UiState.updateApp() }
     }
 

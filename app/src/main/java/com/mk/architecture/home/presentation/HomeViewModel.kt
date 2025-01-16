@@ -1,7 +1,6 @@
 package com.mk.architecture.home.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.mk.architecture.core.manager.error.ResultException.UpdateAppNeeded
 import com.mk.architecture.home.domain.models.Product
 import com.mk.architecture.home.domain.repository.HomeRepository
 import com.mk.architecture.home.presentation.HomeAction.OnProductClick
@@ -27,16 +26,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getData() {
-        showLoading()
         viewModelScope.launch {
-            homeRepository.fetchData()
-                .onSuccess { success(it) }
-                .onFailure { throwable ->
-                    when (throwable) {
-                        is UpdateAppNeeded -> showUpdateAppDialog()
-                        else -> showError(screenConfig.mapToScreenError(throwable))
-                    }
-                }
+            manageRequest(
+                showLoading = true,
+                request = homeRepository.fetchData()
+            )
         }
     }
 }
