@@ -19,6 +19,7 @@ class HomeScreenConfig : ScreenConfig<List<Product>, HomeEffect> {
 }
 
 sealed interface HomeAction {
+    data object InitScreen : HomeAction
     data class OnProductClick(val productId: Int) : HomeAction
 }
 
