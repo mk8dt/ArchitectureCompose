@@ -1,5 +1,6 @@
 package com.mk.architecture.home.presentation
 
+import com.mk.architecture.core.manager.error.ResultException.Forbidden
 import com.mk.architecture.core.manager.error.ResultException.NotFound
 import com.mk.architecture.home.domain.models.Product
 import com.mk.architecture.main.ScreenConfig
@@ -14,7 +15,8 @@ class HomeScreenConfig : ScreenConfig<List<Product>, HomeEffect> {
     override fun mapToScreenError(throwable: Throwable): String =
         when (throwable) {
             is NotFound -> "Producto no encontrado"
-            else -> throwable.message ?: "Error general"
+            is Forbidden -> "Revisa tus permisos de compras"
+            else -> throwable.message ?: "Ha ocurrido un error"
         }
 }
 
